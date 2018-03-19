@@ -240,18 +240,21 @@ lift P u refl = refl
 
 -- Definition 2.4.1
 
-_~_ : {A : Set} → {P : A → Set} → (f g : (x : A) → P x) → (x : A) → Set
-_~_ {A} {P} f g x = f x ≡ g x
+_~_ : {A : Set} → {P : A → Set} → (f g : (x : A) → P x) → Set
+_~_ {A} {P} f g = (x : A) → f x ≡ g x
 
 -- Lemma 2.4.2
 
--- f~f : {A : Set} → {P : A → Set} → (f : (x : A) → P x) → (f ~ f)
+f~f : {A : Set} → {P : A → Set} → (f : (x : A) → P x) → (f ~ f)
+f~f {A} {P} f = λ x → refl
 
--- f~g→g~f :
+f~g→g~f : {A : Set} → {P : A → Set} → (f g : (x : A) → P x) → (f ~ g → g ~ f)
+f~g→g~f {A} {P} f g = λ p → λ x → (p x) ⁻¹
 
--- f~g→g~h→f~h :
+f~g→g~h→f~h : {A : Set} → {P : A → Set} → (f g h : (x : A) → P x) → (f ~ g → g ~ h → f ~ h)
+f~g→g~h→f~h {A} {P} f g h = λ p q → λ x → p x ● q x
 
 -- Lemma 2.4.3
 
-Hx●gp≡fp●Hy : {A B : Set} → (x y : A) → (p : x ≡ y) → (f g : A → B) → (H x : (f ~ g) x) → (H x ● g p) ≡ (f p ● H y)
-Hx●gp≡fp●Hy {A} {B} x y p f g H = ?
+Hx●gp≡fp●Hy : {A B : Set} → (x y : A) → (p : x ≡ y) → (f g : A → B) → (H : (f ~ g)) → (H x ● ap g p) ≡ (ap f p ● H y)
+Hx●gp≡fp●Hy {A} {B} x y refl f g H = ((p≡p●refl (H x)) ⁻¹) ● p≡refl●p (H x)
