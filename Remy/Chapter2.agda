@@ -258,3 +258,23 @@ f~g→g~h→f~h {A} {P} f g h = λ p q → λ x → p x ● q x
 
 Hx●gp≡fp●Hy : {A B : Set} → (x y : A) → (p : x ≡ y) → (f g : A → B) → (H : (f ~ g)) → (H x ● ap g p) ≡ (ap f p ● H y)
 Hx●gp≡fp●Hy {A} {B} x y refl f g H = ((p≡p●refl (H x)) ⁻¹) ● p≡refl●p (H x)
+
+p●q≡p●r : {A : Set} → {x y z : A} → (p : x ≡ y) → (q r : y ≡ z) → r ≡ q → (p ● r) ≡ (p ● q)
+p●q≡p●r {A} {x} {y} {z} p q r refl = refl
+
+-- Corollary 2.4.4
+
+Hfx≡fHx : {A : Set} → (f : A → A) → (H : f ~ id A) → (x : A) → H(f(x)) ≡ ap f (H(x))
+Hfx≡fHx {A} f H =
+  λ x → let a = p≡p●refl (H (f x))
+            c = p●q≡p●r (H (f x)) (H x ● ((H x) ⁻¹)) refl ((p●p⁻¹≡refl (H x)) ⁻¹)
+            l = (p●q≡p●r (ap f (H x)) (H x ● ((H x) ⁻¹)) refl ((p●p⁻¹≡refl (H x)) ⁻¹)) ⁻¹
+            n = Hx●gp≡fp●Hy (f x) x (H x) f (id A) H
+            m = (ap (λ y → H (f x) ● y) (apidAp≡p (H x)) ⁻¹) ● n
+            e = ((p●[q●r]≡[p●q]●r (H (f x)) (H x) (H x ⁻¹)) ● (ap (λ q → q ● (H x ⁻¹)) m)) ● ((p●[q●r]≡[p●q]●r (ap f (H x)) (H x) (H x ⁻¹)) ⁻¹)
+            d = (e ● l) ● ((p≡p●refl (ap f (H x))) ⁻¹)
+            b = c ● d
+        in a ● b
+
+-- apidAp≡p : {A : Set} → {x y : A} → (p : x ≡ y) → ap (id A) p ≡ p
+-- p●p⁻¹≡refl : {A : Set} → {x y : A} → (p : x ≡ y) → p ● (p ⁻¹) ≡ refl {lzero} {A} {x}
