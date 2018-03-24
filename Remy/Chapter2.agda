@@ -267,14 +267,13 @@ p●q≡p●r {A} {x} {y} {z} p q r refl = refl
 Hfx≡fHx : {A : Set} → (f : A → A) → (H : f ~ id A) → (x : A) → H(f(x)) ≡ ap f (H(x))
 Hfx≡fHx {A} f H =
   λ x → let a = p≡p●refl (H (f x))
-            c = p●q≡p●r (H (f x)) (H x ● ((H x) ⁻¹)) refl ((p●p⁻¹≡refl (H x)) ⁻¹)
-            l = (p●q≡p●r (ap f (H x)) (H x ● ((H x) ⁻¹)) refl ((p●p⁻¹≡refl (H x)) ⁻¹)) ⁻¹
+            z = p≡p●refl (ap f (H x))
+            b = p●q≡p●r (H (f x)) (H x ● ((H x) ⁻¹)) refl ((p●p⁻¹≡refl (H x)) ⁻¹)
+            y = p●q≡p●r (ap f (H x)) (H x ● ((H x) ⁻¹)) refl ((p●p⁻¹≡refl (H x)) ⁻¹)
             n = Hx●gp≡fp●Hy (f x) x (H x) f (id A) H
-            m = (ap (λ y → H (f x) ● y) (apidAp≡p (H x)) ⁻¹) ● n
-            e = ((p●[q●r]≡[p●q]●r (H (f x)) (H x) (H x ⁻¹)) ● (ap (λ q → q ● (H x ⁻¹)) m)) ● ((p●[q●r]≡[p●q]●r (ap f (H x)) (H x) (H x ⁻¹)) ⁻¹)
-            d = (e ● l) ● ((p≡p●refl (ap f (H x))) ⁻¹)
-            b = c ● d
-        in a ● b
-
--- apidAp≡p : {A : Set} → {x y : A} → (p : x ≡ y) → ap (id A) p ≡ p
--- p●p⁻¹≡refl : {A : Set} → {x y : A} → (p : x ≡ y) → p ● (p ⁻¹) ≡ refl {lzero} {A} {x}
+            m = (ap (λ p → H (f x) ● p) (apidAp≡p (H x)) ⁻¹) ● n
+            o = (ap (λ q → q ● (H x ⁻¹)) m)
+            comml = p●[q●r]≡[p●q]●r (H (f x)) (H x) (H x ⁻¹)
+            commr = p●[q●r]≡[p●q]●r (ap f (H x)) (H x) (H x ⁻¹)
+            l = ((comml ● o) ● (commr ⁻¹))
+        in a ● (b ● ((l ● (y ⁻¹)) ● (z ⁻¹)))
